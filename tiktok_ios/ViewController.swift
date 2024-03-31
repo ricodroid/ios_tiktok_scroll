@@ -107,30 +107,40 @@ class ViewController: UIViewController, UIScrollViewDelegate {
     
     
     @objc func buttonTapped(_ sender: UIButton) {
-        sender.isSelected = !sender.isSelected // 選択状態を切り替え
-        
-        // 初期アイコンとタップされたアイコンの名前を定義
-        let initialIconNames = ["icon_human", "icon_star", "icon_good", "icon_bad", "icon_search"]
-        let tappedIconNames: [String: String] = [
-            "icon_star": "icon_star_tapped",
-            "icon_good": "icon_good_tapped",
-            "icon_bad": "icon_bad_tapped"
-        ]
-        
-        let currentIconName = initialIconNames[sender.tag]
-        var newImageName: String?
-        
-        if sender.isSelected, let tappedIconName = tappedIconNames[currentIconName] {
-            // 選択状態の場合、タップされたアイコンに切り替え
-            newImageName = tappedIconName
+        if sender.tag == 0 { // icon_human がタップされた場合、tagは0と仮定
+            // MyListViewControllerへ遷移
+            let myListVC = MyListViewController()
+            // myListVC.modalPresentationStyle = .fullScreen // iOS 13以降では、モーダルの全画面表示を指定する場合。
+            myListVC.modalPresentationStyle = .fullScreen 
+            present(myListVC, animated: true, completion: nil)
         } else {
-            // 非選択状態の場合、初期アイコンに戻す
-            newImageName = currentIconName
+            sender.isSelected = !sender.isSelected // 選択状態を切り替え
+            
+            // 初期アイコンとタップされたアイコンの名前を定義
+            let initialIconNames = ["icon_human", "icon_star", "icon_good", "icon_bad", "icon_search"]
+            let tappedIconNames: [String: String] = [
+                "icon_star": "icon_star_tapped",
+                "icon_good": "icon_good_tapped",
+                "icon_bad": "icon_bad_tapped"
+            ]
+            
+            let currentIconName = initialIconNames[sender.tag]
+            var newImageName: String?
+            
+            if sender.isSelected, let tappedIconName = tappedIconNames[currentIconName] {
+                // 選択状態の場合、タップされたアイコンに切り替え
+                newImageName = tappedIconName
+            } else {
+                // 非選択状態の場合、初期アイコンに戻す
+                newImageName = currentIconName
+            }
+            
+            if let newImageName = newImageName, let newImage = UIImage(named: newImageName) {
+                sender.setImage(newImage, for: .normal)
+            }
         }
         
-        if let newImageName = newImageName, let newImage = UIImage(named: newImageName) {
-            sender.setImage(newImage, for: .normal)
-        }
+        
     }
     
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {

@@ -17,6 +17,7 @@
 		3F4062B72BB95D65005E7377 /* tiktok_iosUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F4062B62BB95D65005E7377 /* tiktok_iosUITests.swift */; };
 		3F4062B92BB95D65005E7377 /* tiktok_iosUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F4062B82BB95D65005E7377 /* tiktok_iosUITestsLaunchTests.swift */; };
 		3F4062C72BB969DC005E7377 /* ExpandableTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F4062C62BB969DC005E7377 /* ExpandableTextView.swift */; };
+		3F4062C92BB9704F005E7377 /* MyListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F4062C82BB9704F005E7377 /* MyListViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -51,6 +52,7 @@
 		3F4062B62BB95D65005E7377 /* tiktok_iosUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = tiktok_iosUITests.swift; sourceTree = "<group>"; };
 		3F4062B82BB95D65005E7377 /* tiktok_iosUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = tiktok_iosUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		3F4062C62BB969DC005E7377 /* ExpandableTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpandableTextView.swift; sourceTree = "<group>"; };
+		3F4062C82BB9704F005E7377 /* MyListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyListViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -105,6 +107,7 @@
 				3F4062972BB95D63005E7377 /* SceneDelegate.swift */,
 				3F4062992BB95D63005E7377 /* ViewController.swift */,
 				3F40629B2BB95D63005E7377 /* Main.storyboard */,
+				3F4062C82BB9704F005E7377 /* MyListViewController.swift */,
 				3F40629E2BB95D65005E7377 /* Assets.xcassets */,
 				3F4062A02BB95D65005E7377 /* LaunchScreen.storyboard */,
 				3F4062A32BB95D65005E7377 /* Info.plist */,
@@ -263,6 +266,7 @@
 			files = (
 				3F40629A2BB95D63005E7377 /* ViewController.swift in Sources */,
 				3F4062962BB95D63005E7377 /* AppDelegate.swift in Sources */,
+				3F4062C92BB9704F005E7377 /* MyListViewController.swift in Sources */,
 				3F4062982BB95D63005E7377 /* SceneDelegate.swift in Sources */,
 				3F4062C72BB969DC005E7377 /* ExpandableTextView.swift in Sources */,
 			);
