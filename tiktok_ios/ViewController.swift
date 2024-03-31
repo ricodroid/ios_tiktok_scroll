@@ -62,33 +62,53 @@ class ViewController: UIViewController, UIScrollViewDelegate {
     }
     
     func addButtonsToScrollView() {
-        // ボタンの追加ロジック（以前の実装をここに移動）
         let buttonHeight: CGFloat = 60
         let buttonWidth: CGFloat = 60
         let gapBetweenButtons: CGFloat = 20
         let pageHeight = view.frame.height
-        
+
+        let iconNames = ["icon_human", "icon_star", "icon_good", "icon_bad", "icon_search"]
+
         for page in 0..<videoUrls.count {
             let buttonsStartY = pageHeight * CGFloat(page) + (pageHeight / 2 - (buttonHeight * 5 + gapBetweenButtons * 4) / 2) + 100
-            
-            for i in 0..<5 {
+
+            for i in 0..<iconNames.count {
                 let button = UIButton(frame: CGRect(x: scrollView.frame.width - buttonWidth - 20,
                                                     y: buttonsStartY + CGFloat(i) * (buttonHeight + gapBetweenButtons),
                                                     width: buttonWidth,
                                                     height: buttonHeight))
-                button.backgroundColor = .white
-                button.layer.cornerRadius = buttonWidth / 2
-                button.setTitle("\(i+1)", for: .normal)
-                button.setTitleColor(.black, for: .normal)
+                if let buttonImage = UIImage(named: iconNames[i]) {
+                    button.setImage(buttonImage, for: .normal)
+                }
+                
+                button.tag = i // タグの割り当て
                 button.addTarget(self, action: #selector(buttonTapped(_:)), for: .touchUpInside)
                 scrollView.addSubview(button)
             }
         }
     }
+
+    
+    // タップされた際に切り替える画像の名前を管理する辞書
+    let tappedImageNames: [String: String] = [
+        "icon_star": "icon_star_tapped",
+        "icon_good": "icon_good_tapped",
+        "icon_bad": "icon_bad_tapped"
+    ]
+
     
     @objc func buttonTapped(_ sender: UIButton) {
-        print("Button \(sender.title(for: .normal) ?? "") tapped")
+        let tappedIconNames: [Int: String] = [
+            1: "icon_star_tapped", // icon_starのタグは1
+            2: "icon_good_tapped", // icon_goodのタグは2
+            3: "icon_bad_tapped"   // icon_badのタグは3
+        ]
+        
+        if let tappedImageName = tappedIconNames[sender.tag], let tappedImage = UIImage(named: tappedImageName) {
+            sender.setImage(tappedImage, for: .normal)
+        }
     }
+
     
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
         let pageIndex = Int(scrollView.contentOffset.y / scrollView.frame.size.height)
@@ -98,5 +118,3 @@ class ViewController: UIViewController, UIScrollViewDelegate {
         }
     }
 }
-
-
