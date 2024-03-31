@@ -11,6 +11,7 @@ import AVKit
 
 class ViewController: UIViewController, UIScrollViewDelegate {
     var players: [AVPlayer] = []
+    var expandableTextViews: [ExpandableTextView] = []
     
     let scrollView = UIScrollView()
     
@@ -27,10 +28,12 @@ class ViewController: UIViewController, UIScrollViewDelegate {
     let textContents = [
         "これは最初のビデオの説明です。",
         "ここに2番目のビデオの説明を入れます。",
-        "3番目のビデオについての情報がここに来ます。",
+        "3番目のビデオについての情報がここに来ます。雨にも負けず風邪にも負けず",
+        "4番目のビデオについての情報がここに来ます。雨にも負けず風邪にも負けず",
+        "5番目のビデオについての情報がここに来ます。雨にも負けず風邪にも負けず",
         
     ]
-
+    
     
     
     override func viewDidLoad() {
@@ -39,49 +42,45 @@ class ViewController: UIViewController, UIScrollViewDelegate {
         setupScrollView()
         addVideosToScrollView()
         addButtonsToScrollView()
-        addTextViewsToScrollView() // テキストビューの追加
-
-        scrollView.delegate = self
+        addTextViewsToScrollView()
     }
-
     
     func setupScrollView() {
         scrollView.frame = view.bounds
         scrollView.contentSize = CGSize(width: view.frame.width, height: view.frame.height * CGFloat(videoUrls.count))
         scrollView.isPagingEnabled = true
+        scrollView.delegate = self
         view.addSubview(scrollView)
     }
     
+    
     func addVideosToScrollView() {
-        players = [] // プレイヤー配列を初期化
-
         for (index, videoUrlString) in videoUrls.enumerated() {
-            guard let url = URL(string: videoUrlString) else { continue }
-
+            let url = URL(string: videoUrlString)!
             let videoView = UIView(frame: CGRect(x: 0, y: view.frame.height * CGFloat(index), width: view.frame.width, height: view.frame.height))
             scrollView.addSubview(videoView)
-
+            
             let player = AVPlayer(url: url)
             let playerLayer = AVPlayerLayer(player: player)
             playerLayer.frame = videoView.bounds
             playerLayer.videoGravity = .resizeAspectFill
             videoView.layer.addSublayer(playerLayer)
-
-            players.append(player) // プレイヤーを配列に追加
+            players.append(player)
         }
     }
+    
     
     func addButtonsToScrollView() {
         let buttonHeight: CGFloat = 60
         let buttonWidth: CGFloat = 60
         let gapBetweenButtons: CGFloat = 20
         let pageHeight = view.frame.height
-
+        
         let iconNames = ["icon_human", "icon_star", "icon_good", "icon_bad", "icon_search"]
-
+        
         for page in 0..<videoUrls.count {
             let buttonsStartY = pageHeight * CGFloat(page) + (pageHeight / 2 - (buttonHeight * 5 + gapBetweenButtons * 4) / 2) + 100
-
+            
             for i in 0..<iconNames.count {
                 let button = UIButton(frame: CGRect(x: scrollView.frame.width - buttonWidth - 20,
                                                     y: buttonsStartY + CGFloat(i) * (buttonHeight + gapBetweenButtons),
@@ -97,7 +96,7 @@ class ViewController: UIViewController, UIScrollViewDelegate {
             }
         }
     }
-
+    
     
     // タップされた際に切り替える画像の名前を管理する辞書
     let tappedImageNames: [String: String] = [
@@ -105,11 +104,11 @@ class ViewController: UIViewController, UIScrollViewDelegate {
         "icon_good": "icon_good_tapped",
         "icon_bad": "icon_bad_tapped"
     ]
-
+    
     
     @objc func buttonTapped(_ sender: UIButton) {
         sender.isSelected = !sender.isSelected // 選択状態を切り替え
-
+        
         // 初期アイコンとタップされたアイコンの名前を定義
         let initialIconNames = ["icon_human", "icon_star", "icon_good", "icon_bad", "icon_search"]
         let tappedIconNames: [String: String] = [
@@ -117,10 +116,10 @@ class ViewController: UIViewController, UIScrollViewDelegate {
             "icon_good": "icon_good_tapped",
             "icon_bad": "icon_bad_tapped"
         ]
-
+        
         let currentIconName = initialIconNames[sender.tag]
         var newImageName: String?
-
+        
         if sender.isSelected, let tappedIconName = tappedIconNames[currentIconName] {
             // 選択状態の場合、タップされたアイコンに切り替え
             newImageName = tappedIconName
@@ -128,12 +127,11 @@ class ViewController: UIViewController, UIScrollViewDelegate {
             // 非選択状態の場合、初期アイコンに戻す
             newImageName = currentIconName
         }
-
+        
         if let newImageName = newImageName, let newImage = UIImage(named: newImageName) {
             sender.setImage(newImage, for: .normal)
         }
     }
-
     
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
         let pageIndex = Int(scrollView.contentOffset.y / scrollView.frame.size.height)
@@ -145,28 +143,24 @@ class ViewController: UIViewController, UIScrollViewDelegate {
     
     func addTextViewsToScrollView() {
         let textViewHeight: CGFloat = 100
-
+        let textViewBottomOffset: CGFloat = 10 // 下からのオフセットを10dpに設定
+        
         for (index, textContent) in textContents.enumerated() {
-            // テキストビューのフレームをページの下部に配置
-            let textViewFrame = CGRect(
-                x: 0,
-                y: scrollView.frame.height * CGFloat(index) + scrollView.frame.height - textViewHeight,
-                width: scrollView.frame.width,
-                height: textViewHeight
-            )
-            let textView = UITextView(frame: textViewFrame)
-            textView.backgroundColor = .clear // 背景を透明に設定
-            textView.textColor = .white
-            textView.font = UIFont.systemFont(ofSize: 16)
-            textView.isEditable = false
-            textView.isScrollEnabled = false
-            textView.text = textContent
-            textView.textContainerInset = UIEdgeInsets(top: 12, left: 12, bottom: 12, right: 12)
-            scrollView.addSubview(textView)
+            let textViewYPosition = scrollView.frame.height * CGFloat(index) + scrollView.frame.height - textViewHeight - textViewBottomOffset
+            let textViewFrame = CGRect(x: 0, y: textViewYPosition, width: scrollView.frame.width, height: textViewHeight)
+            let expandableTextView = ExpandableTextView(frame: textViewFrame, text: textContent)
+            expandableTextView.tag = index // タグを設定して、どのテキストコンテンツに対応しているか識別
+            
+            scrollView.addSubview(expandableTextView)
         }
         
-        // スクロールビューのcontentSizeを更新
-        let contentHeight = scrollView.frame.height * CGFloat(max(videoUrls.count, textContents.count))
-        scrollView.contentSize = CGSize(width: scrollView.frame.width, height: contentHeight)
+        // スクロールビューの contentSize を更新
+        scrollView.contentSize = CGSize(width: scrollView.frame.width, height: scrollView.frame.height * CGFloat(textContents.count))
     }
+    
+    
+    
+    
+    
+    
 }

@@ -16,6 +16,7 @@
 		3F4062AD2BB95D65005E7377 /* tiktok_iosTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F4062AC2BB95D65005E7377 /* tiktok_iosTests.swift */; };
 		3F4062B72BB95D65005E7377 /* tiktok_iosUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F4062B62BB95D65005E7377 /* tiktok_iosUITests.swift */; };
 		3F4062B92BB95D65005E7377 /* tiktok_iosUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F4062B82BB95D65005E7377 /* tiktok_iosUITestsLaunchTests.swift */; };
+		3F4062C72BB969DC005E7377 /* ExpandableTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F4062C62BB969DC005E7377 /* ExpandableTextView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -49,6 +50,7 @@
 		3F4062B22BB95D65005E7377 /* tiktok_iosUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = tiktok_iosUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		3F4062B62BB95D65005E7377 /* tiktok_iosUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = tiktok_iosUITests.swift; sourceTree = "<group>"; };
 		3F4062B82BB95D65005E7377 /* tiktok_iosUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = tiktok_iosUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		3F4062C62BB969DC005E7377 /* ExpandableTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpandableTextView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -106,6 +108,7 @@
 				3F40629E2BB95D65005E7377 /* Assets.xcassets */,
 				3F4062A02BB95D65005E7377 /* LaunchScreen.storyboard */,
 				3F4062A32BB95D65005E7377 /* Info.plist */,
+				3F4062C62BB969DC005E7377 /* ExpandableTextView.swift */,
 			);
 			path = tiktok_ios;
 			sourceTree = "<group>";
@@ -261,6 +264,7 @@
 				3F40629A2BB95D63005E7377 /* ViewController.swift in Sources */,
 				3F4062962BB95D63005E7377 /* AppDelegate.swift in Sources */,
 				3F4062982BB95D63005E7377 /* SceneDelegate.swift in Sources */,
+				3F4062C72BB969DC005E7377 /* ExpandableTextView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
