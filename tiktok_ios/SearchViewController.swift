@@ -34,15 +34,36 @@ class SearchViewController: UIViewController {
     }
 
     private func setupSearchBar() {
+        let containerView = UIView()
+        containerView.translatesAutoresizingMaskIntoConstraints = false
+        self.view.addSubview(containerView)
+        
+        let backButton = UIButton(type: .custom)
+        backButton.setImage(UIImage(named: "backIcon"), for: .normal)
+        backButton.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
+        backButton.translatesAutoresizingMaskIntoConstraints = false
+        containerView.addSubview(backButton)
+        
         searchBar.translatesAutoresizingMaskIntoConstraints = false
-        self.view.addSubview(searchBar)
+        containerView.addSubview(searchBar)
         
         NSLayoutConstraint.activate([
-            searchBar.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor),
-            searchBar.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
-            searchBar.trailingAnchor.constraint(equalTo: self.view.trailingAnchor)
+            containerView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor),
+            containerView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            containerView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            
+            backButton.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 8),
+            backButton.centerYAnchor.constraint(equalTo: containerView.centerYAnchor),
+            backButton.widthAnchor.constraint(equalToConstant: 44),
+            backButton.heightAnchor.constraint(equalToConstant: 44),
+            
+            searchBar.leadingAnchor.constraint(equalTo: backButton.trailingAnchor, constant: 8),
+            searchBar.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
+            searchBar.centerYAnchor.constraint(equalTo: containerView.centerYAnchor),
+            containerView.heightAnchor.constraint(equalTo: searchBar.heightAnchor)
         ])
     }
+
 
     private func setupScrollView() {
         scrollView.translatesAutoresizingMaskIntoConstraints = false
