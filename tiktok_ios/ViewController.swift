@@ -113,6 +113,10 @@ class ViewController: UIViewController, UIScrollViewDelegate {
             // myListVC.modalPresentationStyle = .fullScreen // iOS 13以降では、モーダルの全画面表示を指定する場合。
             myListVC.modalPresentationStyle = .fullScreen 
             present(myListVC, animated: true, completion: nil)
+        }else if sender.tag == 4 {
+            let searchVC = SearchViewController()
+            searchVC.modalPresentationStyle = .fullScreen
+            present(searchVC, animated: true, completion: nil)
         } else {
             sender.isSelected = !sender.isSelected // 選択状態を切り替え
             
