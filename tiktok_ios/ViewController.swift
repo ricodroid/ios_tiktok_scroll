@@ -14,6 +14,7 @@ class ViewController: UIViewController, UIScrollViewDelegate {
     var expandableTextViews: [ExpandableTextView] = []
     
     let scrollView = UIScrollView()
+    var buttonArrays: [[UIButton]] = []
     
     let videoUrls = [
         "https://test-pvg-video-contents-bucket.s3.ap-northeast-1.amazonaws.com/pexels-bu%CC%88s%CC%A7ra-c%CC%A7akmak-20159065+(1080p).mp4",
@@ -71,31 +72,37 @@ class ViewController: UIViewController, UIScrollViewDelegate {
     
     
     func addButtonsToScrollView() {
-        let buttonHeight: CGFloat = 60
-        let buttonWidth: CGFloat = 60
-        let gapBetweenButtons: CGFloat = 20
-        let pageHeight = view.frame.height
-        
-        let iconNames = ["icon_human", "icon_star", "icon_good", "icon_bad", "icon_search"]
-        
-        for page in 0..<videoUrls.count {
-            let buttonsStartY = pageHeight * CGFloat(page) + (pageHeight / 2 - (buttonHeight * 5 + gapBetweenButtons * 4) / 2) + 100
-            
-            for i in 0..<iconNames.count {
-                let button = UIButton(frame: CGRect(x: scrollView.frame.width - buttonWidth - 20,
-                                                    y: buttonsStartY + CGFloat(i) * (buttonHeight + gapBetweenButtons),
-                                                    width: buttonWidth,
-                                                    height: buttonHeight))
-                if let buttonImage = UIImage(named: iconNames[i]) {
-                    button.setImage(buttonImage, for: .normal)
-                }
-                
-                button.tag = i // タグの割り当て
-                button.addTarget(self, action: #selector(buttonTapped(_:)), for: .touchUpInside)
-                scrollView.addSubview(button)
-            }
-        }
-    }
+           let buttonHeight: CGFloat = 60
+           let buttonWidth: CGFloat = 60
+           let gapBetweenButtons: CGFloat = 20
+           let pageHeight = view.frame.height
+           
+           let iconNames = ["icon_human", "icon_star", "icon_good", "icon_bad", "icon_search"]
+           
+           for page in 0..<videoUrls.count {
+               var buttonsForPage: [UIButton] = [] // Array to store buttons for current page
+               
+               let buttonsStartY = pageHeight * CGFloat(page) + (pageHeight / 2 - (buttonHeight * 5 + gapBetweenButtons * 4) / 2) + 100
+               
+               for i in 0..<iconNames.count {
+                   let button = UIButton(frame: CGRect(x: scrollView.frame.width - buttonWidth - 20,
+                                                       y: buttonsStartY + CGFloat(i) * (buttonHeight + gapBetweenButtons),
+                                                       width: buttonWidth,
+                                                       height: buttonHeight))
+                   if let buttonImage = UIImage(named: iconNames[i]) {
+                       button.setImage(buttonImage, for: .normal)
+                   }
+                   
+                   button.tag = i // Assign tag to the button
+                   button.addTarget(self, action: #selector(buttonTapped(_:)), for: .touchUpInside)
+                   scrollView.addSubview(button)
+                   
+                   buttonsForPage.append(button) // Add button to array for current page
+               }
+               
+               buttonArrays.append(buttonsForPage) // Add array of buttons for current page to main array
+           }
+       }
     
     
     // タップされた際に切り替える画像の名前を管理する辞書
@@ -105,67 +112,70 @@ class ViewController: UIViewController, UIScrollViewDelegate {
         "icon_bad": "icon_bad_tapped"
     ]
     
-    
     @objc func buttonTapped(_ sender: UIButton) {
-        if sender.tag == 0 { // icon_human がタップされた場合
-            // MyListViewControllerへ遷移
-            let myListVC = MyListViewController()
-            myListVC.modalPresentationStyle = .fullScreen
-            present(myListVC, animated: true, completion: nil)
-        } else if sender.tag == 2 { // goodボタンがタップされた場合
-            // badボタンの状態をリセット
-            if let badButton = scrollView.viewWithTag(3) as? UIButton {
-                badButton.isSelected = false
-                badButton.setImage(UIImage(named: "icon_bad"), for: .normal)
-            }
-            // goodボタンの画像を切り替え
-            sender.isSelected = !sender.isSelected
-            let imageName = sender.isSelected ? "icon_good_tapped" : "icon_good"
-            sender.setImage(UIImage(named: imageName), for: .normal)
-        } else if sender.tag == 3 { // badボタンがタップされた場合
-            // goodボタンの状態をリセット
-            if let goodButton = scrollView.viewWithTag(2) as? UIButton {
-                goodButton.isSelected = false
-                goodButton.setImage(UIImage(named: "icon_good"), for: .normal)
-            }
-            // badボタンの画像を切り替え
-            sender.isSelected = !sender.isSelected
-            let imageName = sender.isSelected ? "icon_bad_tapped" : "icon_bad"
-            sender.setImage(UIImage(named: imageName), for: .normal)
-        } else if sender.tag == 4 { // 検索アイコンがタップされた場合
-            let searchVC = SearchViewController()
-            searchVC.modalPresentationStyle = .fullScreen
-            present(searchVC, animated: true, completion: nil)
-        } else {
-            sender.isSelected = !sender.isSelected // 選択状態を切り替え
-            
-            // 初期アイコンとタップされたアイコンの名前を定義
-            let initialIconNames = ["icon_human", "icon_star", "icon_good", "icon_bad", "icon_search"]
-            let tappedIconNames: [String: String] = [
-                "icon_star": "icon_star_tapped",
-                "icon_good": "icon_good_tapped",
-                "icon_bad": "icon_bad_tapped"
-            ]
-            
-            let currentIconName = initialIconNames[sender.tag]
-            var newImageName: String?
-            
-            if sender.isSelected, let tappedIconName = tappedIconNames[currentIconName] {
-                // 選択状態の場合、タップされたアイコンに切り替え
-                newImageName = tappedIconName
-            } else {
-                // 非選択状態の場合、初期アイコンに戻す
-                newImageName = currentIconName
-            }
-            
-            
-            if let newImageName = newImageName, let newImage = UIImage(named: newImageName) {
-                sender.setImage(newImage, for: .normal)
-            }
-        }
-        
-        
-    }
+           // Get the page index based on sender's position in scrollView
+           let pageIndex = Int(scrollView.contentOffset.y / scrollView.frame.size.height)
+           
+           // Access buttons for current page
+           let buttonsForPage = buttonArrays[pageIndex]
+           
+           // Handle button actions using buttonsForPage array
+           if sender.tag == 0 { // icon_human がタップされた場合
+               // MyListViewControllerへ遷移
+               let myListVC = MyListViewController()
+               myListVC.modalPresentationStyle = .fullScreen
+               present(myListVC, animated: true, completion: nil)
+           } else if sender.tag == 2 { // goodボタンがタップされた場合
+               // badボタンの状態をリセット
+               let badButton = buttonsForPage[3]
+               badButton.isSelected = false
+               badButton.setImage(UIImage(named: "icon_bad"), for: .normal)
+               
+               // goodボタンの画像を切り替え
+               sender.isSelected = !sender.isSelected
+               let imageName = sender.isSelected ? "icon_good_tapped" : "icon_good"
+               sender.setImage(UIImage(named: imageName), for: .normal)
+           } else if sender.tag == 3 { // badボタンがタップされた場合
+               // goodボタンの状態をリセット
+               let goodButton = buttonsForPage[2]
+               goodButton.isSelected = false
+               goodButton.setImage(UIImage(named: "icon_good"), for: .normal)
+               
+               // badボタンの画像を切り替え
+               sender.isSelected = !sender.isSelected
+               let imageName = sender.isSelected ? "icon_bad_tapped" : "icon_bad"
+               sender.setImage(UIImage(named: imageName), for: .normal)
+           } else if sender.tag == 4 { // 検索アイコンがタップされた場合
+               let searchVC = SearchViewController()
+               searchVC.modalPresentationStyle = .fullScreen
+               present(searchVC, animated: true, completion: nil)
+           } else {
+               sender.isSelected = !sender.isSelected // 選択状態を切り替え
+               
+               // 初期アイコンとタップされたアイコンの名前を定義
+               let initialIconNames = ["icon_human", "icon_star", "icon_good", "icon_bad", "icon_search"]
+               let tappedIconNames: [String: String] = [
+                   "icon_star": "icon_star_tapped",
+                   "icon_good": "icon_good_tapped",
+                   "icon_bad": "icon_bad_tapped"
+               ]
+               
+               let currentIconName = initialIconNames[sender.tag]
+               var newImageName: String?
+               
+               if sender.isSelected, let tappedIconName = tappedIconNames[currentIconName] {
+                   // 選択状態の場合、タップされたアイコンに切り替え
+                   newImageName = tappedIconName
+               } else {
+                   // 非選択状態の場合、初期アイコンに戻す
+                   newImageName = currentIconName
+               }
+               
+               if let newImageName = newImageName, let newImage = UIImage(named: newImageName) {
+                   sender.setImage(newImage, for: .normal)
+               }
+           }
+       }
     
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
         let pageIndex = Int(scrollView.contentOffset.y / scrollView.frame.size.height)
@@ -191,10 +201,5 @@ class ViewController: UIViewController, UIScrollViewDelegate {
         // スクロールビューの contentSize を更新
         scrollView.contentSize = CGSize(width: scrollView.frame.width, height: scrollView.frame.height * CGFloat(textContents.count))
     }
-    
-    
-    
-    
-    
     
 }
