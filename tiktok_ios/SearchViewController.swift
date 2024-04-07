@@ -6,6 +6,8 @@ class SearchViewController: UIViewController {
     let searchTextView = UITextView()
     let searchButton = UIButton(type: .system)
     let tagsStackView = UIStackView()
+    let backButton = UIButton(type: .system)
+    let headerContainerView = UIView()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -15,11 +17,20 @@ class SearchViewController: UIViewController {
     }
     
     private func setupViews() {
+        // Header Container View Configuration
+        headerContainerView.backgroundColor = .white
+        
+        // Header Container View Configuration
+        view.addSubview(headerContainerView)
+        headerContainerView.addSubview(backButton)
+        headerContainerView.addSubview(searchContainerView)
+    
         // Search Container View Configuration
         searchContainerView.backgroundColor = .white
         searchContainerView.layer.cornerRadius = 10
         searchContainerView.layer.borderWidth = 1
         searchContainerView.layer.borderColor = UIColor.lightGray.cgColor
+        
         
         // Search Text View Configuration
         searchTextView.isScrollEnabled = true
@@ -54,6 +65,14 @@ class SearchViewController: UIViewController {
             tagButton.heightAnchor.constraint(equalToConstant: 28).isActive = true
         }
         
+        // Configure the back button
+               backButton.setImage(UIImage(named: "backIcon"), for: .normal)
+               backButton.tintColor = .blue // Set the tint color if needed
+               backButton.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
+               
+               // Add the back button to the view
+               view.addSubview(backButton)
+        
         // Add subviews to search container
         searchContainerView.addSubview(searchTextView)
         searchContainerView.addSubview(searchButton)
@@ -63,42 +82,67 @@ class SearchViewController: UIViewController {
         view.addSubview(tagsStackView)
     }
     
+    @objc private func backButtonTapped() {
+            // Define the action for the back button tap
+            // For instance, dismiss the current view controller or pop it from the navigation stack
+            self.dismiss(animated: true, completion: nil)
+        }
+    
     private func layoutViews() {
+        headerContainerView.translatesAutoresizingMaskIntoConstraints = false
+        backButton.translatesAutoresizingMaskIntoConstraints = false
         searchContainerView.translatesAutoresizingMaskIntoConstraints = false
         searchTextView.translatesAutoresizingMaskIntoConstraints = false
         searchButton.translatesAutoresizingMaskIntoConstraints = false
         tagsStackView.translatesAutoresizingMaskIntoConstraints = false
-        
-        // Constraints for the search container view
+
+        // Header Container View Constraints
         NSLayoutConstraint.activate([
-            searchContainerView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
-            searchContainerView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            searchContainerView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-            searchContainerView.heightAnchor.constraint(equalToConstant: 50)
+            headerContainerView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
+            headerContainerView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            headerContainerView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20)
         ])
-        
-        // Constraints for the search text view
+
+        // Back Button Constraints
+        NSLayoutConstraint.activate([
+            backButton.leadingAnchor.constraint(equalTo: headerContainerView.leadingAnchor),
+            backButton.centerYAnchor.constraint(equalTo: headerContainerView.centerYAnchor),
+            backButton.widthAnchor.constraint(equalToConstant: 44),
+            backButton.heightAnchor.constraint(equalToConstant: 44)
+        ])
+
+        // Search Container View Constraints
+        NSLayoutConstraint.activate([
+            searchContainerView.leadingAnchor.constraint(equalTo: backButton.trailingAnchor, constant: 8),
+            searchContainerView.centerYAnchor.constraint(equalTo: headerContainerView.centerYAnchor),
+            searchContainerView.trailingAnchor.constraint(equalTo: headerContainerView.trailingAnchor),
+            searchContainerView.heightAnchor.constraint(equalToConstant: 50),
+            headerContainerView.bottomAnchor.constraint(equalTo: searchContainerView.bottomAnchor, constant: 8)  // This ensures the headerContainerView's height is dynamic
+        ])
+
+        // Search TextView Constraints
         NSLayoutConstraint.activate([
             searchTextView.leadingAnchor.constraint(equalTo: searchContainerView.leadingAnchor, constant: 8),
             searchTextView.topAnchor.constraint(equalTo: searchContainerView.topAnchor, constant: 8),
             searchTextView.bottomAnchor.constraint(equalTo: searchContainerView.bottomAnchor, constant: -8),
             searchTextView.trailingAnchor.constraint(equalTo: searchButton.leadingAnchor, constant: -8)
         ])
-        
-        // Constraints for the search button
+
+        // Search Button Constraints
         NSLayoutConstraint.activate([
             searchButton.trailingAnchor.constraint(equalTo: searchContainerView.trailingAnchor, constant: -8),
             searchButton.centerYAnchor.constraint(equalTo: searchContainerView.centerYAnchor),
             searchButton.widthAnchor.constraint(equalToConstant: 60)
         ])
-        
-        // Constraints for the tags stack view
+
+        // Tags Stack View Constraints
         NSLayoutConstraint.activate([
-            tagsStackView.topAnchor.constraint(equalTo: searchContainerView.bottomAnchor, constant: 20),
+            tagsStackView.topAnchor.constraint(equalTo: headerContainerView.bottomAnchor, constant: 20),
             tagsStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             tagsStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20)
         ])
     }
+
     
     @objc private func searchButtonTapped() {
         // Perform the search action
@@ -106,7 +150,7 @@ class SearchViewController: UIViewController {
         let searchResultsVC = SearchResultsViewController()
         // myListVC.modalPresentationStyle = .fullScreen // iOS 13以降では、モーダルの全画面表示を指定する場合。
         searchResultsVC.modalPresentationStyle = .fullScreen
-        present(searchResultsVC, animated: true, completion: nil)
+        present(searchResultsVC, animated: false, completion: nil)
     }
     
     private func updateTextViewContentSize() {

@@ -4,7 +4,6 @@
 //
 //  Created by riko on 2024/04/07.
 //
-
 import UIKit
 import AVFoundation
 
@@ -14,8 +13,6 @@ class SearchResultsViewController: UIViewController, UICollectionViewDataSource,
 
     let headerView = UIView()
     let backButton = UIButton(type: .system)
-    let usernameLabel = UILabel()
-    
     let searchContainerView = UIView()
     let searchTextView = UITextView()
     let searchButton = UIButton(type: .system)
@@ -32,19 +29,28 @@ class SearchResultsViewController: UIViewController, UICollectionViewDataSource,
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        view.backgroundColor = .white
         setupCollectionView()
         setSearchBar()
-        setSearchBar()
         layoutViews()
-        view.backgroundColor = .white
     }
     
     func setSearchBar() {
+        headerView.backgroundColor = .white
+        view.addSubview(headerView)
+        
+        // Configure the back button
+        backButton.setImage(UIImage(named: "backIcon"), for: .normal)
+        backButton.tintColor = .blue
+        backButton.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
+        headerView.addSubview(backButton)
+        
         // Search Container View Configuration
         searchContainerView.backgroundColor = .white
         searchContainerView.layer.cornerRadius = 10
         searchContainerView.layer.borderWidth = 1
         searchContainerView.layer.borderColor = UIColor.lightGray.cgColor
+        headerView.addSubview(searchContainerView)
         
         // Search Text View Configuration
         searchTextView.isScrollEnabled = true
@@ -54,23 +60,22 @@ class SearchResultsViewController: UIViewController, UICollectionViewDataSource,
         searchTextView.alwaysBounceHorizontal = true
         searchTextView.contentSize = CGSize(width: CGFloat.greatestFiniteMagnitude, height: searchTextView.frame.height)
         searchTextView.textContainer.widthTracksTextView = false
+        searchContainerView.addSubview(searchTextView)
 
         // Search Button Configuration
         searchButton.setTitle("検索", for: .normal)
         searchButton.addTarget(self, action: #selector(searchButtonTapped), for: .touchUpInside)
+        searchContainerView.addSubview(searchButton)
     }
 
-
-
     @objc func backButtonTapped() {
-        print("戻るボタンtapped")
         dismiss(animated: true, completion: nil)
     }
 
     func setupCollectionView() {
         let layout = UICollectionViewFlowLayout()
         let spacing: CGFloat = 10
-        let totalSpacing = spacing * (2 + 1) // Assuming 2 is the number of columns
+        let totalSpacing = spacing * (2 + 1)  // Assuming 2 is the number of columns
         let itemWidth = (view.bounds.width - totalSpacing) / 2
         let itemHeight = itemWidth * 1.5
 
@@ -84,7 +89,6 @@ class SearchResultsViewController: UIViewController, UICollectionViewDataSource,
         collectionView.delegate = self
         collectionView.dataSource = self
         collectionView.backgroundColor = .white
-        collectionView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(collectionView)
     }
 
@@ -94,7 +98,8 @@ class SearchResultsViewController: UIViewController, UICollectionViewDataSource,
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath)
-
+        
+        // Remove previous subviews
         for subview in cell.contentView.subviews {
             subview.removeFromSuperview()
         }
@@ -126,59 +131,62 @@ class SearchResultsViewController: UIViewController, UICollectionViewDataSource,
             let img = try assetImgGenerate.copyCGImage(at: time, actualTime: nil)
             return UIImage(cgImage: img)
         } catch {
-            print("サムネイル生成エラー: \(error)")
+            print("Thumbnail generation error: \(error)")
             return nil
         }
     }
+
     @objc private func searchButtonTapped() {
-        // Perform the search action
-        print("検索ボタン")
-        let searchResultsVC = SearchResultsViewController()
-        // myListVC.modalPresentationStyle = .fullScreen // iOS 13以降では、モーダルの全画面表示を指定する場合。
-        searchResultsVC.modalPresentationStyle = .fullScreen
-        present(searchResultsVC, animated: true, completion: nil)
+        // Intended for search action, currently prints to console for demo purposes
+        print("Search button tapped")
     }
     
     private func layoutViews() {
-        // Add views as subviews before setting up constraints
-        view.addSubview(searchContainerView)
-            searchContainerView.addSubview(searchTextView)
-            searchContainerView.addSubview(searchButton)
-        
-        searchContainerView.translatesAutoresizingMaskIntoConstraints = false
-        searchTextView.translatesAutoresizingMaskIntoConstraints = false
-        searchButton.translatesAutoresizingMaskIntoConstraints = false
-
-        // Constraints for the search container view
+        headerView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            searchContainerView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
-            searchContainerView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            searchContainerView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-            searchContainerView.heightAnchor.constraint(equalToConstant: 50)
+            headerView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
+            headerView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            headerView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20)
+        ])
+
+        backButton.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            backButton.leadingAnchor.constraint(equalTo: headerView.leadingAnchor),
+            backButton.centerYAnchor.constraint(equalTo: headerView.centerYAnchor),
+            backButton.widthAnchor.constraint(equalToConstant: 44),
+            backButton.heightAnchor.constraint(equalToConstant: 44)
         ])
         
-        // Constraints for the search text view
+        searchContainerView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            searchContainerView.leadingAnchor.constraint(equalTo: backButton.trailingAnchor, constant: 8),
+            searchContainerView.centerYAnchor.constraint(equalTo: headerView.centerYAnchor),
+            searchContainerView.trailingAnchor.constraint(equalTo: headerView.trailingAnchor),
+            searchContainerView.heightAnchor.constraint(equalToConstant: 50),
+            headerView.bottomAnchor.constraint(equalTo: searchContainerView.bottomAnchor, constant: 8)
+        ])
+
+        searchTextView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             searchTextView.leadingAnchor.constraint(equalTo: searchContainerView.leadingAnchor, constant: 8),
             searchTextView.topAnchor.constraint(equalTo: searchContainerView.topAnchor, constant: 8),
             searchTextView.bottomAnchor.constraint(equalTo: searchContainerView.bottomAnchor, constant: -8),
             searchTextView.trailingAnchor.constraint(equalTo: searchButton.leadingAnchor, constant: -8)
         ])
-        
-        // Constraints for the search button
+
+        searchButton.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             searchButton.trailingAnchor.constraint(equalTo: searchContainerView.trailingAnchor, constant: -8),
             searchButton.centerYAnchor.constraint(equalTo: searchContainerView.centerYAnchor),
             searchButton.widthAnchor.constraint(equalToConstant: 60)
         ])
         
-        // Constraints for collectionView to start below the searchContainerView
-            NSLayoutConstraint.activate([
-                collectionView.topAnchor.constraint(equalTo: searchContainerView.bottomAnchor, constant: 10),
-                collectionView.leftAnchor.constraint(equalTo: view.leftAnchor),
-                collectionView.rightAnchor.constraint(equalTo: view.rightAnchor),
-                collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
-            ])
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            collectionView.topAnchor.constraint(equalTo: headerView.bottomAnchor, constant: 10),
+            collectionView.leftAnchor.constraint(equalTo: view.leftAnchor),
+            collectionView.rightAnchor.constraint(equalTo: view.rightAnchor),
+            collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        ])
     }
-
-   }
+}
