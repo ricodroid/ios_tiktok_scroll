@@ -44,6 +44,7 @@ class ViewController: UIViewController, UIScrollViewDelegate {
         addVideosToScrollView()
         addButtonsToScrollView()
         addTextViewsToScrollView()
+        addBackButton()
     }
     
     func setupScrollView() {
@@ -102,6 +103,18 @@ class ViewController: UIViewController, UIScrollViewDelegate {
                
                buttonArrays.append(buttonsForPage) // Add array of buttons for current page to main array
            }
+       }
+    
+    func addBackButton() {
+           let backButton = UIButton(type: .custom)
+           backButton.frame = CGRect(x: 20, y: 40, width: 30, height: 25)
+           backButton.setImage(UIImage(named: "backIcon"), for: .normal)
+           backButton.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
+           view.addSubview(backButton)
+       }
+    
+    @objc func backButtonTapped() {
+        dismiss(animated: true, completion: nil)
        }
     
     
