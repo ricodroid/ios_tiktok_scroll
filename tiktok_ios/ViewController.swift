@@ -107,13 +107,32 @@ class ViewController: UIViewController, UIScrollViewDelegate {
     
     
     @objc func buttonTapped(_ sender: UIButton) {
-        if sender.tag == 0 { // icon_human がタップされた場合、tagは0と仮定
+        if sender.tag == 0 { // icon_human がタップされた場合
             // MyListViewControllerへ遷移
             let myListVC = MyListViewController()
-            // myListVC.modalPresentationStyle = .fullScreen // iOS 13以降では、モーダルの全画面表示を指定する場合。
-            myListVC.modalPresentationStyle = .fullScreen 
+            myListVC.modalPresentationStyle = .fullScreen
             present(myListVC, animated: true, completion: nil)
-        }else if sender.tag == 4 {
+        } else if sender.tag == 2 { // goodボタンがタップされた場合
+            // badボタンの状態をリセット
+            if let badButton = scrollView.viewWithTag(3) as? UIButton {
+                badButton.isSelected = false
+                badButton.setImage(UIImage(named: "icon_bad"), for: .normal)
+            }
+            // goodボタンの画像を切り替え
+            sender.isSelected = !sender.isSelected
+            let imageName = sender.isSelected ? "icon_good_tapped" : "icon_good"
+            sender.setImage(UIImage(named: imageName), for: .normal)
+        } else if sender.tag == 3 { // badボタンがタップされた場合
+            // goodボタンの状態をリセット
+            if let goodButton = scrollView.viewWithTag(2) as? UIButton {
+                goodButton.isSelected = false
+                goodButton.setImage(UIImage(named: "icon_good"), for: .normal)
+            }
+            // badボタンの画像を切り替え
+            sender.isSelected = !sender.isSelected
+            let imageName = sender.isSelected ? "icon_bad_tapped" : "icon_bad"
+            sender.setImage(UIImage(named: imageName), for: .normal)
+        } else if sender.tag == 4 { // 検索アイコンがタップされた場合
             let searchVC = SearchViewController()
             searchVC.modalPresentationStyle = .fullScreen
             present(searchVC, animated: true, completion: nil)
@@ -138,6 +157,7 @@ class ViewController: UIViewController, UIScrollViewDelegate {
                 // 非選択状態の場合、初期アイコンに戻す
                 newImageName = currentIconName
             }
+            
             
             if let newImageName = newImageName, let newImage = UIImage(named: newImageName) {
                 sender.setImage(newImage, for: .normal)
