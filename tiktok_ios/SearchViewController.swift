@@ -103,6 +103,10 @@ class SearchViewController: UIViewController {
     @objc private func searchButtonTapped() {
         // Perform the search action
         print("検索ボタン")
+        let searchResultsVC = SearchResultsViewController()
+        // myListVC.modalPresentationStyle = .fullScreen // iOS 13以降では、モーダルの全画面表示を指定する場合。
+        searchResultsVC.modalPresentationStyle = .fullScreen
+        present(searchResultsVC, animated: true, completion: nil)
     }
     
     private func updateTextViewContentSize() {
