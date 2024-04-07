@@ -3,7 +3,7 @@ import UIKit
 class SearchViewController: UIViewController {
     
     let searchContainerView = UIView()
-    let searchTextField = UITextField()
+    let searchTextView = UITextView()
     let searchButton = UIButton(type: .system)
     let tagsStackView = UIStackView()
     
@@ -21,9 +21,12 @@ class SearchViewController: UIViewController {
         searchContainerView.layer.borderWidth = 1
         searchContainerView.layer.borderColor = UIColor.lightGray.cgColor
         
-        // Search Text Field Configuration
-        searchTextField.borderStyle = .none
-        searchTextField.placeholder = "Search"
+        // Search Text View Configuration
+        searchTextView.backgroundColor = .clear // Set the background to clear
+        searchTextView.isScrollEnabled = false // Disable scrolling
+        searchTextView.isEditable = false // Disable editing
+        searchTextView.textContainerInset = UIEdgeInsets(top: 8, left: 8, bottom: 8, right: 8)
+        searchTextView.layer.cornerRadius = 10
         
         // Search Button Configuration
         searchButton.setTitle("検索", for: .normal)
@@ -50,7 +53,7 @@ class SearchViewController: UIViewController {
         }
         
         // Add subviews to search container
-        searchContainerView.addSubview(searchTextField)
+        searchContainerView.addSubview(searchTextView)
         searchContainerView.addSubview(searchButton)
         
         // Add subviews to view
@@ -60,7 +63,7 @@ class SearchViewController: UIViewController {
     
     private func layoutViews() {
         searchContainerView.translatesAutoresizingMaskIntoConstraints = false
-        searchTextField.translatesAutoresizingMaskIntoConstraints = false
+        searchTextView.translatesAutoresizingMaskIntoConstraints = false
         searchButton.translatesAutoresizingMaskIntoConstraints = false
         tagsStackView.translatesAutoresizingMaskIntoConstraints = false
         
@@ -72,11 +75,12 @@ class SearchViewController: UIViewController {
             searchContainerView.heightAnchor.constraint(equalToConstant: 50)
         ])
         
-        // Constraints for the search text field
+        // Constraints for the search text view
         NSLayoutConstraint.activate([
-            searchTextField.leadingAnchor.constraint(equalTo: searchContainerView.leadingAnchor, constant: 8),
-            searchTextField.centerYAnchor.constraint(equalTo: searchContainerView.centerYAnchor),
-            searchTextField.trailingAnchor.constraint(equalTo: searchButton.leadingAnchor, constant: -8)
+            searchTextView.leadingAnchor.constraint(equalTo: searchContainerView.leadingAnchor, constant: 8),
+            searchTextView.topAnchor.constraint(equalTo: searchContainerView.topAnchor, constant: 8),
+            searchTextView.bottomAnchor.constraint(equalTo: searchContainerView.bottomAnchor, constant: -8),
+            searchTextView.trailingAnchor.constraint(equalTo: searchButton.leadingAnchor, constant: -8)
         ])
         
         // Constraints for the search button
@@ -96,20 +100,37 @@ class SearchViewController: UIViewController {
     
     @objc private func searchButtonTapped() {
         // Perform the search action
+        print("検索ボタン")
     }
     
     @objc private func tagButtonTapped(_ sender: UIButton) {
-        // Append the tag's title to the search text field with hashtag format
         if let tagTitle = sender.titleLabel?.text {
-            // Check if the text field already contains text
-            if let searchText = searchTextField.text, !searchText.isEmpty {
-                // Add a space if there is already text in the search box
-                searchTextField.text = "\(searchText) \(tagTitle)"
+            // Paddingを加えたタグ文字列
+            let tagString = " #\(tagTitle) "
+            let attributes: [NSAttributedString.Key: Any] = [
+                .backgroundColor: UIColor.systemBlue, // 濃い水色の背景
+                .foregroundColor: UIColor.white, // 白色のテキスト
+                .font: UIFont.systemFont(ofSize: 14) // フォントサイズは適宜調整
+            ]
+            let attributedString = NSMutableAttributedString(string: tagString, attributes: attributes)
+            
+            // 各タグの後に余白を追加
+            let spacing = NSAttributedString(string: " ", attributes: [.font: UIFont.systemFont(ofSize: 14)])
+            
+            if let textViewText = searchTextView.attributedText {
+                let mutableAttributedString = NSMutableAttributedString(attributedString: textViewText)
+                mutableAttributedString.append(spacing) // タグ間のスペースを追加
+                mutableAttributedString.append(attributedString)
+                searchTextView.attributedText = mutableAttributedString
             } else {
-                // Otherwise, start with the first tag
-                searchTextField.text = "\(tagTitle)"
+                searchTextView.attributedText = attributedString
             }
         }
     }
+
+
 }
 
+// Usage in AppDelegate or SceneDelegate
+// let viewController = SearchViewController()
+// window?.rootViewController = viewController
