@@ -30,7 +30,8 @@ class SearchViewController: UIViewController {
 
     @objc func backButtonTapped() {
         // このビューコントローラをポップするか、適切なアクションをここに記述
-        self.navigationController?.popViewController(animated: true)
+//        self.navigationController?.popViewController(animated: true)
+        dismiss(animated: true, completion: nil)
     }
 
     private func setupSearchBar() {

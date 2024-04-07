@@ -19,6 +19,7 @@
 		3F4062B92BB95D65005E7377 /* tiktok_iosUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F4062B82BB95D65005E7377 /* tiktok_iosUITestsLaunchTests.swift */; };
 		3F4062C72BB969DC005E7377 /* ExpandableTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F4062C62BB969DC005E7377 /* ExpandableTextView.swift */; };
 		3F4062C92BB9704F005E7377 /* MyListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F4062C82BB9704F005E7377 /* MyListViewController.swift */; };
+		3F4062CB2BC286BF005E7377 /* SearchResultsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F4062CA2BC286BF005E7377 /* SearchResultsViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -55,6 +56,7 @@
 		3F4062B82BB95D65005E7377 /* tiktok_iosUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = tiktok_iosUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		3F4062C62BB969DC005E7377 /* ExpandableTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpandableTextView.swift; sourceTree = "<group>"; };
 		3F4062C82BB9704F005E7377 /* MyListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyListViewController.swift; sourceTree = "<group>"; };
+		3F4062CA2BC286BF005E7377 /* SearchResultsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultsViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -110,6 +112,7 @@
 				3F4062992BB95D63005E7377 /* ViewController.swift */,
 				3F40629B2BB95D63005E7377 /* Main.storyboard */,
 				3F4062C82BB9704F005E7377 /* MyListViewController.swift */,
+				3F4062CA2BC286BF005E7377 /* SearchResultsViewController.swift */,
 				1D277FD22BC0254700344880 /* SearchViewController.swift */,
 				3F40629E2BB95D65005E7377 /* Assets.xcassets */,
 				3F4062A02BB95D65005E7377 /* LaunchScreen.storyboard */,
@@ -272,6 +275,7 @@
 				3F4062962BB95D63005E7377 /* AppDelegate.swift in Sources */,
 				3F4062C92BB9704F005E7377 /* MyListViewController.swift in Sources */,
 				3F4062982BB95D63005E7377 /* SceneDelegate.swift in Sources */,
+				3F4062CB2BC286BF005E7377 /* SearchResultsViewController.swift in Sources */,
 				3F4062C72BB969DC005E7377 /* ExpandableTextView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
