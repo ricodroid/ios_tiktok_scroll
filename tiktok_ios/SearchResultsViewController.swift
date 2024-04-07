@@ -153,8 +153,8 @@ class SearchResultsViewController: UIViewController, UICollectionViewDataSource,
         NSLayoutConstraint.activate([
             backButton.leadingAnchor.constraint(equalTo: headerView.leadingAnchor),
             backButton.centerYAnchor.constraint(equalTo: headerView.centerYAnchor),
-            backButton.widthAnchor.constraint(equalToConstant: 44),
-            backButton.heightAnchor.constraint(equalToConstant: 44)
+            backButton.widthAnchor.constraint(equalToConstant: 30),
+            backButton.heightAnchor.constraint(equalToConstant: 25)
         ])
         
         searchContainerView.translatesAutoresizingMaskIntoConstraints = false

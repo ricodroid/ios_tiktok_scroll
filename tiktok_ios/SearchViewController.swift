@@ -107,8 +107,8 @@ class SearchViewController: UIViewController {
         NSLayoutConstraint.activate([
             backButton.leadingAnchor.constraint(equalTo: headerContainerView.leadingAnchor),
             backButton.centerYAnchor.constraint(equalTo: headerContainerView.centerYAnchor),
-            backButton.widthAnchor.constraint(equalToConstant: 44),
-            backButton.heightAnchor.constraint(equalToConstant: 44)
+            backButton.widthAnchor.constraint(equalToConstant: 30),
+            backButton.heightAnchor.constraint(equalToConstant: 25)
         ])
 
         // Search Container View Constraints

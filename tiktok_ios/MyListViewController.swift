@@ -27,20 +27,38 @@ class MyListViewController: UIViewController, UICollectionViewDelegate, UICollec
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        view.backgroundColor = .white
         setupCollectionView()
         setupHeaderView()
     }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+
+        // headerViewのフレームをセットアップ
+        let topInset = view.safeAreaInsets.top
+        headerView.frame = CGRect(x: 0, y: topInset, width: view.bounds.width, height: 90)
+        
+        // collectionViewのフレームをセットアップ（headerViewの下からスタート）
+        let collectionViewY = headerView.frame.maxY
+        collectionView.frame = CGRect(x: 0, y: collectionViewY, width: view.bounds.width, height: view.bounds.height - collectionViewY)
+    }
+
 
     func setupHeaderView() {
-        headerView.frame = CGRect(x: 0, y: 0, width: view.bounds.width, height: 90)
-        headerView.backgroundColor = .white
-        view.addSubview(headerView)
+        // セーフエリアの上端を考慮して、headerViewのY位置を設定
+       let topInset = view.safeAreaInsets.top
+       headerView.frame = CGRect(x: 0, y: topInset, width: view.bounds.width, height: 90)
+       headerView.backgroundColor = .white
+       view.addSubview(headerView)
 
-        backButton.setTitle("<", for: .normal)
-        backButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 24)
-        backButton.frame = CGRect(x: 10, y: (headerView.bounds.height - 40) / 2, width: 40, height: 40)
-        backButton.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
-        headerView.addSubview(backButton)
+        // backButtonを画像で設定
+       let backImage = UIImage(named: "backIcon") // 'backIcon'はアセットカタログにある画像の名前
+       backButton.setImage(backImage, for: .normal)
+       backButton.imageView?.contentMode = .scaleAspectFit
+       backButton.frame = CGRect(x: 10, y: (headerView.bounds.height - 40) / 2, width: 30, height: 25)
+       backButton.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
+       headerView.addSubview(backButton)
 
         usernameLabel.text = "ユーザー名"
         usernameLabel.textAlignment = .center
@@ -68,13 +86,13 @@ class MyListViewController: UIViewController, UICollectionViewDelegate, UICollec
         layout.minimumLineSpacing = spacing
         layout.minimumInteritemSpacing = spacing
 
-        collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: layout)
-        collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "cell")
-        collectionView.delegate = self
-        collectionView.dataSource = self
-        collectionView.backgroundColor = .white
-        collectionView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        view.addSubview(collectionView)
+        collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout) // フレームはviewDidLayoutSubviewsで設定
+            collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "cell")
+            collectionView.delegate = self
+            collectionView.dataSource = self
+            collectionView.backgroundColor = .white
+            view.addSubview(collectionView) // ここで追加だけしておきます
+       
     }
 
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
