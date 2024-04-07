@@ -22,12 +22,14 @@ class SearchViewController: UIViewController {
         searchContainerView.layer.borderColor = UIColor.lightGray.cgColor
         
         // Search Text View Configuration
-        searchTextView.backgroundColor = .clear // Set the background to clear
-        searchTextView.isScrollEnabled = false // Disable scrolling
-        searchTextView.isEditable = false // Disable editing
-        searchTextView.textContainerInset = UIEdgeInsets(top: 8, left: 8, bottom: 8, right: 8)
-        searchTextView.layer.cornerRadius = 10
-        
+        searchTextView.isScrollEnabled = true
+        searchTextView.showsHorizontalScrollIndicator = true
+        searchTextView.showsVerticalScrollIndicator = false
+        searchTextView.alwaysBounceVertical = false
+        searchTextView.alwaysBounceHorizontal = true
+        searchTextView.contentSize = CGSize(width: CGFloat.greatestFiniteMagnitude, height: searchTextView.frame.height)
+        searchTextView.textContainer.widthTracksTextView = false
+
         // Search Button Configuration
         searchButton.setTitle("検索", for: .normal)
         searchButton.addTarget(self, action: #selector(searchButtonTapped), for: .touchUpInside)
@@ -103,10 +105,19 @@ class SearchViewController: UIViewController {
         print("検索ボタン")
     }
     
+    private func updateTextViewContentSize() {
+        // Set the text container's height to match the UITextView height
+        let fixedHeight = searchTextView.frame.size.height
+        searchTextView.textContainer.size = CGSize(width: CGFloat.greatestFiniteMagnitude, height: fixedHeight)
+        // Calculate the right width for the content
+        let newSize = searchTextView.sizeThatFits(CGSize(width: CGFloat.greatestFiniteMagnitude, height: fixedHeight))
+        searchTextView.contentSize = CGSize(width: newSize.width, height: fixedHeight)
+    }
+    
     @objc private func tagButtonTapped(_ sender: UIButton) {
         if let tagTitle = sender.titleLabel?.text {
             // Paddingを加えたタグ文字列
-            let tagString = " #\(tagTitle) "
+            let tagString = " \(tagTitle) "
             let attributes: [NSAttributedString.Key: Any] = [
                 .backgroundColor: UIColor.systemBlue, // 濃い水色の背景
                 .foregroundColor: UIColor.white, // 白色のテキスト
@@ -126,6 +137,7 @@ class SearchViewController: UIViewController {
                 searchTextView.attributedText = attributedString
             }
         }
+        updateTextViewContentSize()
     }
 
 
