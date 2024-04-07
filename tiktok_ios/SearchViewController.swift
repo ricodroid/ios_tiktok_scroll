@@ -9,7 +9,7 @@ class SearchViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white // 背景を白に設定
+        view.backgroundColor = .white
         setupViews()
         layoutViews()
     }
@@ -31,11 +31,11 @@ class SearchViewController: UIViewController {
         
         // Tags Stack View Configuration
         tagsStackView.axis = .horizontal
-        tagsStackView.alignment = .center // ボタンを中央揃えに設定
+        tagsStackView.alignment = .center
         tagsStackView.distribution = .fillProportionally
         tagsStackView.spacing = 8
         
-        // Add tags to the stack view
+        // Add tags to the stack view with an action
         let tags = ["食事療法", "筋力トレーニング", "気象病", "FCS カウンセリング", "運動療法"]
         for tag in tags {
             let tagButton = UIButton(type: .system)
@@ -44,6 +44,7 @@ class SearchViewController: UIViewController {
             tagButton.setTitleColor(.white, for: .normal)
             tagButton.layer.cornerRadius = 14
             tagButton.clipsToBounds = true
+            tagButton.addTarget(self, action: #selector(tagButtonTapped(_:)), for: .touchUpInside)
             tagsStackView.addArrangedSubview(tagButton)
             tagButton.heightAnchor.constraint(equalToConstant: 28).isActive = true
         }
@@ -68,19 +69,18 @@ class SearchViewController: UIViewController {
             searchContainerView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
             searchContainerView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             searchContainerView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-            searchContainerView.heightAnchor.constraint(equalToConstant: 50) // 高さを固定
+            searchContainerView.heightAnchor.constraint(equalToConstant: 50)
         ])
         
         // Constraints for the search text field
         NSLayoutConstraint.activate([
             searchTextField.leadingAnchor.constraint(equalTo: searchContainerView.leadingAnchor, constant: 8),
             searchTextField.centerYAnchor.constraint(equalTo: searchContainerView.centerYAnchor),
-            searchTextField.heightAnchor.constraint(equalTo: searchContainerView.heightAnchor)
+            searchTextField.trailingAnchor.constraint(equalTo: searchButton.leadingAnchor, constant: -8)
         ])
         
         // Constraints for the search button
         NSLayoutConstraint.activate([
-            searchButton.leadingAnchor.constraint(equalTo: searchTextField.trailingAnchor, constant: 8),
             searchButton.trailingAnchor.constraint(equalTo: searchContainerView.trailingAnchor, constant: -8),
             searchButton.centerYAnchor.constraint(equalTo: searchContainerView.centerYAnchor),
             searchButton.widthAnchor.constraint(equalToConstant: 60)
@@ -96,6 +96,20 @@ class SearchViewController: UIViewController {
     
     @objc private func searchButtonTapped() {
         // Perform the search action
+    }
+    
+    @objc private func tagButtonTapped(_ sender: UIButton) {
+        // Append the tag's title to the search text field with hashtag format
+        if let tagTitle = sender.titleLabel?.text {
+            // Check if the text field already contains text
+            if let searchText = searchTextField.text, !searchText.isEmpty {
+                // Add a space if there is already text in the search box
+                searchTextField.text = "\(searchText) \(tagTitle)"
+            } else {
+                // Otherwise, start with the first tag
+                searchTextField.text = "\(tagTitle)"
+            }
+        }
     }
 }
 
